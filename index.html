@@ -131,14 +131,17 @@
             <!-- Formulaire de capture direct via FormSubmit -->
             <!-- REMPLACEZ 'VOTRE_EMAIL@EXEMPLE.COM' PAR VOTRE VRAI EMAIL DANS LA LIGNE CI-DESSOUS -->
             <form action="https://formsubmit.co/bravobgz@hotmail.com" method="POST" class="space-y-4">
-                <!-- Désactive le captcha pour une meilleure expérience -->
-                <input type="hidden" name="_captcha" value="false">
-                
-                <input type="email" name="email" required placeholder="bravobgz@hotmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm py-3 rounded-xl transition">
-                    Rejoindre la liste d'attente
-                </button>
-            </form>
+    <!-- Désactive le captcha -->
+    <input type="hidden" name="_captcha" value="false">
+    
+    <!-- REDIRECTION AUTOMATIQUE : Remplacez l'URL par l'adresse de votre site GitHub Pages -->
+    <input type="hidden" name="_next" value="https://ledocpc-hue.github.io/">
+
+    <input type="email" name="email" required placeholder="bravobgz@hotmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm py-3 rounded-xl transition">
+        Rejoindre la liste d'attente
+    </button>
+</form>
         </div>
     </div>
 
