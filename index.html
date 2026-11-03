@@ -146,16 +146,68 @@
     </div>
 
     <!-- Scripts JS basiques pour l'ouverture / fermeture de la fenêtre -->
-    <script>
-        function openModal() {
-            document.getElementById('waitlistModal').classList.remove('hidden');
-            document.getElementById('waitlistModal').classList.add('flex');
-        }
+<script>
+    function openModal() {
+        document.getElementById('waitlistModal').classList.remove('hidden');
+        document.getElementById('waitlistModal').classList.add('flex');
+    }
 
-        function closeModal() {
-            document.getElementById('waitlistModal').classList.add('hidden');
-            document.getElementById('waitlistModal').classList.remove('flex');
+    function closeModal() {
+        document.getElementById('waitlistModal').classList.add('hidden');
+        document.getElementById('waitlistModal').classList.remove('flex');
+    }
+
+    async function submitForm(event) {
+        event.preventDefault();
+        
+        const form = document.getElementById('waitlistForm');
+        const email = document.getElementById('userEmail').value;
+        const submitBtn = document.getElementById('submitBtn');
+        const successText = document.getElementById('successText');
+
+        // Désactive le bouton pendant l'envoi
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Envoi en cours...";
+
+        try {
+            // Remplacez l'email ci-dessous par votre vraie adresse
+            const response = await fetch("https://formsubmit.co/ajax/bravobgz@hotmail", {
+                method: "POST",
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    _subject: "Nouvelle inscription Waitlist LegalFast !"
+                })
+            });
+
+            if (response.ok) {
+                form.classList.add('hidden');
+                successText.classList.remove('hidden');
+                
+                // Ferme la fenêtre automatiquement après 2.5 secondes
+                setTimeout(() => {
+                    closeModal();
+                    // Réinitialise le formulaire pour la prochaine fois
+                    form.reset();
+                    form.classList.remove('hidden');
+                    successText.classList.add('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Rejoindre la liste d'attente";
+                }, 2500);
+            } else {
+                alert("Une erreur est survenue, veuillez réessayer.");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Rejoindre la liste d'attente";
+            }
+        } catch (error) {
+            alert("Erreur réseau. Vérifiez votre connexion.");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Rejoindre la liste d'attente";
         }
-    </script>
+    }
+</script>
 </body>
 </html>
