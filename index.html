@@ -178,17 +178,18 @@
             submitBtn.innerText = "Envoi en cours...";
 
             try {
-                const response = await fetch("https://formsubmit.co/ajax/bravobgz@hotmail.com", {
-                    method: "POST",
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        _subject: "Nouvelle inscription à la liste d'attente LegalFast !"
-                    })
-                });
+                const response = await fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+        access_key: "d79972d7-daca-484f-afea-db4014418a59",
+        email: email,
+        subject: "Nouvelle inscription à la liste d'attente LegalFast !"
+    })
+});
 
                 if (response.ok) {
                     document.getElementById('modalContent').classList.add('hidden');
