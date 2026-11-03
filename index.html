@@ -114,100 +114,99 @@
         <p>© LegalFast. Tous droits réservés.</p>
     </footer>
 
-    <!-- POPUP MODAL (Test de la Fausse Porte) -->
+    <!-- POPUP MODAL -->
     <div id="waitlistModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl max-w-md w-full relative shadow-2xl">
             <!-- Bouton fermer -->
             <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
 
-            <div class="text-center mb-6">
-                <div class="inline-flex p-3 bg-indigo-500/10 text-indigo-400 rounded-xl mb-3">🚀</div>
-                <h3 class="text-xl font-bold text-white mb-2">Vous êtes en avance !</h3>
-                <p class="text-sm text-slate-400 leading-relaxed">
-                    L'outil est en cours de finalisation. Laissez votre e-mail pour obtenir un accès prioritaire et bénéficier de <strong>-50 % de réduction (7,50 € au lieu de 15 €)</strong> dès l'ouverture !
-                </p>
+            <!-- Contenu du formulaire -->
+            <div id="modalContent">
+                <div class="text-center mb-6">
+                    <div class="inline-flex p-3 bg-indigo-500/10 text-indigo-400 rounded-xl mb-3">🚀</div>
+                    <h3 class="text-xl font-bold text-white mb-2">Vous êtes en avance !</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        L'outil est en cours de finalisation. Laissez votre e-mail pour obtenir un accès prioritaire et bénéficier de <strong>-50 % de réduction (7,50 € au lieu de 15 €)</strong> dès l'ouverture !
+                    </p>
+                </div>
+
+                <!-- Formulaire AJAX -->
+                <form id="waitlistForm" onsubmit="submitForm(event)" class="space-y-4">
+                    <input type="email" id="userEmail" name="email" required placeholder="bravobgz@hotmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                    <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm py-3 rounded-xl transition">
+                        Rejoindre la liste d'attente
+                    </button>
+                </form>
             </div>
 
-            <!-- Formulaire de capture direct via FormSubmit -->
-            <!-- REMPLACEZ 'VOTRE_EMAIL@EXEMPLE.COM' PAR VOTRE VRAI EMAIL DANS LA LIGNE CI-DESSOUS -->
-            <form action="https://formsubmit.co/bravobgz@hotmail.com" method="POST" class="space-y-4">
-    <!-- Désactive le captcha -->
-    <input type="hidden" name="_captcha" value="false">
-    
-    <!-- REDIRECTION AUTOMATIQUE : Remplacez l'URL par l'adresse de votre site GitHub Pages -->
-    <input type="hidden" name="_next" value="https://ledocpc-hue.github.io/legal-fast/">
-
-    <input type="email" name="email" required placeholder="bravobgz@hotmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
-    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm py-3 rounded-xl transition">
-        Rejoindre la liste d'attente
-    </button>
-</form>
+            <!-- Message de succès (caché par défaut) -->
+            <div id="successMessage" class="hidden text-center py-6">
+                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">✓</div>
+                <h3 class="text-xl font-bold text-white mb-2">Merci !</h3>
+                <p class="text-sm text-slate-400">Votre inscription a bien été enregistrée. Nous vous préviendrons dès le lancement.</p>
+            </div>
         </div>
     </div>
 
-    <!-- Scripts JS basiques pour l'ouverture / fermeture de la fenêtre -->
-<script>
-    function openModal() {
-        document.getElementById('waitlistModal').classList.remove('hidden');
-        document.getElementById('waitlistModal').classList.add('flex');
-    }
+    <!-- Scripts JS -->
+    <script>
+        function openModal() {
+            document.getElementById('waitlistModal').classList.remove('hidden');
+            document.getElementById('waitlistModal').classList.add('flex');
+        }
 
-    function closeModal() {
-        document.getElementById('waitlistModal').classList.add('hidden');
-        document.getElementById('waitlistModal').classList.remove('flex');
-    }
+        function closeModal() {
+            document.getElementById('waitlistModal').classList.add('hidden');
+            document.getElementById('waitlistModal').classList.remove('flex');
+            
+            // Réinitialise l'affichage au cas où la modale est rouverte
+            setTimeout(() => {
+                document.getElementById('modalContent').classList.remove('hidden');
+                document.getElementById('successMessage').classList.add('hidden');
+                document.getElementById('waitlistForm').reset();
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('submitBtn').innerText = "Rejoindre la liste d'attente";
+            }, 300);
+        }
 
-    async function submitForm(event) {
-        event.preventDefault();
-        
-        const form = document.getElementById('waitlistForm');
-        const email = document.getElementById('userEmail').value;
-        const submitBtn = document.getElementById('submitBtn');
-        const successText = document.getElementById('successText');
+        async function submitForm(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('userEmail').value;
+            const submitBtn = document.getElementById('submitBtn');
 
-        // Désactive le bouton pendant l'envoi
-        submitBtn.disabled = true;
-        submitBtn.innerText = "Envoi en cours...";
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Envoi en cours...";
 
-        try {
-            // Remplacez l'email ci-dessous par votre vraie adresse
-            const response = await fetch("https://formsubmit.co/ajax/bravobgz@hotmail", {
-                method: "POST",
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    _subject: "Nouvelle inscription Waitlist LegalFast !"
-                })
-            });
+            try {
+                // REMPLACEZ 'bravobgz@hotmail.com' PAR VOTRE VRAI EMAIL CI-DESSOUS :
+                const response = await fetch("https://formsubmit.co/ajax/bravobgz@hotmail.com", {
+                    method: "POST",
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        _subject: "Nouvelle inscription à la liste d'attente LegalFast !"
+                    })
+                });
 
-            if (response.ok) {
-                form.classList.add('hidden');
-                successText.classList.remove('hidden');
-                
-                // Ferme la fenêtre automatiquement après 2.5 secondes
-                setTimeout(() => {
-                    closeModal();
-                    // Réinitialise le formulaire pour la prochaine fois
-                    form.reset();
-                    form.classList.remove('hidden');
-                    successText.classList.add('hidden');
+                if (response.ok) {
+                    // Cache le formulaire et affiche le message de succès dans la pop-up
+                    document.getElementById('modalContent').classList.add('hidden');
+                    document.getElementById('successMessage').classList.remove('hidden');
+                } else {
+                    alert("Une erreur est survenue, veuillez réessayer.");
                     submitBtn.disabled = false;
                     submitBtn.innerText = "Rejoindre la liste d'attente";
-                }, 2500);
-            } else {
-                alert("Une erreur est survenue, veuillez réessayer.");
+                }
+            } catch (error) {
+                alert("Erreur réseau. Vérifiez votre connexion.");
                 submitBtn.disabled = false;
                 submitBtn.innerText = "Rejoindre la liste d'attente";
             }
-        } catch (error) {
-            alert("Erreur réseau. Vérifiez votre connexion.");
-            submitBtn.disabled = false;
-            submitBtn.innerText = "Rejoindre la liste d'attente";
         }
-    }
-</script>
+    </script>
 </body>
 </html>
